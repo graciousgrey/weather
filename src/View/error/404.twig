@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{{ code }} {{ error }}">
+    <title>404 Not Found</title>
+    <link rel="stylesheet" href="/build/error.css">
+</head>
+<body>
+<div class="container">
+    <!-- Jumbotron -->
+    <div class="jumbotron">
+        <h1><i class="fa fa-frown-o red"></i> {{ code }} {{ error }}</h1>
+        <p class="lead">{% if message %}{{ message }}{% else %}The file or page that you're looking for could not be found.{% endif %}</p>
+        <p><a href="/" class="btn btn-default btn-lg text-center"><span class="red">Take Me To The Homepage</span></a>
+        </p>
+    </div>
+</div>
+{% if file %}
+    <div class="container">
+        <div class="body-content">
+            <div class="row">
+<pre>
+{% if class %}Class: {{ class }}
+{% endif %}
+File: {{ file }}
+Line: {{ line }}
+</pre>
+                <p>
+                    <strong>Stack trace</strong>
+                </p>
+                <ol>
+                    {% for location in trace %}
+                        <li><code>
+                                {% if location.class %}{{ location.class }}::{% endif %}{% if location.function %}{{ location.function }}(){% endif %}
+                                {% if location.file and location.function %} in {% endif %}
+                                {% if location.file %}{{ location.file }}{% endif %}
+                                {%  if location.line %} line {{ location.line }}{% endif %}
+                            </code></li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </div>
+    </div>
+{% endif %}
+</body>
+</html>

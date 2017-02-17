@@ -1,0 +1,137 @@
+imports:
+    - { resource: parameters.yml }
+    - { resource: twig.yml }
+    - { resource: mail.yml }
+
+services:
+    db.driver:
+        class: Doctrine\DBAL\Driver\Mysqli\Driver
+
+    db:
+        class: TestTools\Doctrine\DBAL\Connection
+        arguments:
+            - %db.options%
+            - "@db.driver"
+        calls:
+            - [ setFixturePrefix, ['sql'] ]
+            - [ useFixtures, ["%fixture.path%"] ]
+
+    log.handler:
+        class: Monolog\Handler\TestHandler
+
+    log:
+        class: Monolog\Logger
+        arguments: [ "main" ]
+        calls:
+            - [ pushHandler, [ "@log.handler" , "debug" ] ]
+
+    redis:
+        class: Redis
+        calls:
+            - [ connect, ['%redis.host%', '%redis.port%']]
+
+    cache:
+        class: Symfony\Component\Cache\Adapter\ArrayAdapter
+        arguments:
+            - 0
+
+    yaml_loader:
+        class: Symfony\Component\Translation\Loader\YamlFileLoader
+
+    array_loader:
+        class: Symfony\Component\Translation\Loader\ArrayLoader
+
+    message_selector:
+        class: Symfony\Component\Translation\MessageSelector
+
+    translator:
+        class: Symfony\Component\Translation\Translator
+        arguments: ['en', "@message_selector"]
+        calls:
+            - [ addLoader, ['yaml', "@yaml_loader"] ]
+            - [ addLoader, ['array', "@array_loader"]]
+            - [ addResource, ['yaml', '%base.path%/../app/l10n/de.yml', 'de'] ]
+            - [ addResource, ['yaml', '%base.path%/../app/l10n/en.yml', 'en'] ]
+
+    validator:
+        class: InputValidation\Validator
+
+    session:
+        class: Weather\Tests\Service\FakeSession
+
+    form.factory:
+        class: InputValidation\FormFactory
+        arguments: [ "@translator", "@validator" ]
+        calls:
+            - [ setFactoryNamespace, [ 'Weather\Form' ] ]
+            - [ setFactoryPostfix, [ 'Form' ] ]
+
+    form.user:
+        class: Weather\Form\UserForm
+        arguments: [ "@translator", "@validator" ]
+
+    form.weatherquery:
+            class: Weather\Form\WeatherQueryForm
+            arguments: [ "@translator", "@validator" ]
+
+    dao.factory:
+        class: Doctrine\ActiveRecord\Dao\Factory
+        arguments:
+            - "@db"
+        calls:
+            - [ setFactoryNamespace, ['Weather\Dao' ] ]
+            - [ setFactoryPostfix, ['Dao'] ]
+
+    model.factory:
+        class: Doctrine\ActiveRecord\Model\Factory
+        arguments:
+            - "@dao.factory"
+        calls:
+            - [ setFactoryNamespace, ['Weather\Model' ] ]
+            - [ setFactoryPostfix, [''] ]
+
+    model.user:
+        class: Weather\Model\UserModel
+        shared: false
+        arguments: [ "@model.factory" ]
+
+    service.session:
+        class: Weather\Service\Session
+        arguments: [ "@session", "@model.user" ]
+
+    service.mail:
+        class: Weather\Service\Mail
+        shared: false
+        arguments: [ "@mailer", "@twig", { %app.email%: %app.name%} ]
+
+    controller.web.index:
+        class: Weather\Controller\IndexController
+
+    controller.web.auth:
+        class: Weather\Controller\AuthController
+        arguments: [ "@service.session", "@model.user=", "@service.mail=" ]
+
+    controller.rest.user:
+        class: Weather\Rest\UserController
+        arguments: [ "@service.session", "@model.user=", "@form.user", "@service.mail=" ]
+
+    controller.web.weather:
+        class: Weather\Controller\WeatherController
+        arguments: [ "@wunderground.client" ]
+
+    http.client:
+        class: GuzzleHttp\Client
+
+    rest.client:
+        class: Weather\Client\RestClient
+        arguments:
+            - "@http.client"
+        calls:
+            - [ setFixturePrefix, ['http'] ]
+            - [ useFixtures, ["%fixture.path%"] ]
+
+    wunderground.client:
+        class: Weather\Client\WundergroundClient
+        arguments:
+            - "@rest.client"
+            - "%wunderground.apikey%"

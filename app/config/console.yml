@@ -1,0 +1,54 @@
+imports:
+    - { resource: parameters.yml }
+    - { resource: services.yml }
+    - { resource: twig.yml }
+
+services:
+    command.sendnewpassword:
+        class: Weather\Command\PasswordResetCommand
+        arguments: [ 'reset-password', "@service.mail=", "@model.user=", "@twig" ]
+
+    console.helper.db:
+        class: Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper
+        arguments:
+            - "@db"
+
+    console.helper.question:
+        class: Symfony\Component\Console\Helper\QuestionHelper
+
+    console.helpers:
+        class: Symfony\Component\Console\Helper\HelperSet
+        arguments:
+            - { db: "@console.helper.db", question: "@console.helper.question" }
+
+    doctrine.migrations.diff:
+        class: Doctrine\DBAL\Migrations\Tools\Console\Command\DiffCommand
+
+    doctrine.migrations.execute:
+        class: Doctrine\DBAL\Migrations\Tools\Console\Command\ExecuteCommand
+
+    doctrine.migrations.generate:
+        class: Doctrine\DBAL\Migrations\Tools\Console\Command\GenerateCommand
+
+    doctrine.migrations.migrate:
+        class: Doctrine\DBAL\Migrations\Tools\Console\Command\MigrateCommand
+
+    doctrine.migrations.status:
+        class: Doctrine\DBAL\Migrations\Tools\Console\Command\StatusCommand
+
+    doctrine.migrations.version:
+        class: Doctrine\DBAL\Migrations\Tools\Console\Command\VersionCommand
+
+    app:
+        class: Symfony\Component\Console\Application
+        arguments: [%app.name%, %app.version%]
+        calls:
+            - [ setCatchExceptions, [ true ] ]
+            - [ setHelperSet, [ "@console.helpers" ] ]
+            - [ add, [ "@doctrine.migrations.diff" ] ]
+            - [ add, [ "@doctrine.migrations.execute" ] ]
+            - [ add, [ "@doctrine.migrations.generate" ] ]
+            - [ add, [ "@doctrine.migrations.migrate" ] ]
+            - [ add, [ "@doctrine.migrations.status" ] ]
+            - [ add, [ "@doctrine.migrations.version" ] ]
+            - [ add, [ "@command.sendnewpassword" ] ]

@@ -1,0 +1,78 @@
+imports:
+    - { resource: parameters.yml }
+    - { resource: services.yml }
+    - { resource: twig.yml }
+    
+parameters:
+    exception.codes:
+        InvalidArgumentException: 400
+        Doctrine\ActiveRecord\Exception\NotFoundException: 404
+        App\Exception\UnauthorizedException: 401
+        App\Exception\AccessDeniedException: 403
+        Symlex\Router\Exception\AccessDeniedException: 403
+        Symlex\Router\Exception\NotFoundException: 404
+        Symlex\Router\Exception\MethodNotAllowedException: 405
+        App\Exception\FormInvalidException: 409
+        Swift_TransportException: 503
+        Exception: 500
+
+    exception.messages:
+        400: 'Bad request'
+        401: 'Unauthorized'
+        402: 'Payment Required'
+        403: 'Forbidden'
+        404: 'Not Found'
+        405: 'Method Not Allowed'
+        406: 'Not Acceptable'
+        407: 'Proxy Authentication Required'
+        408: 'Request Timeout'
+        409: 'Conflict'
+        410: 'Gone'
+        500: 'Looks like something went wrong!'
+        503: 'Service unavailable - check server configuration'
+
+services:
+    request:
+        class: Symfony\Component\HttpFoundation\Request
+
+    session:
+        class: Symfony\Component\HttpFoundation\Session\Session
+
+    service.session:
+        class: Weather\Service\Session
+        arguments: [ "@session", "@model.user=" ]
+
+    app:
+        class: Silex\Application
+
+    controller.web.index:
+        class: Weather\Controller\IndexController
+
+    controller.web.auth:
+        class: Weather\Controller\AuthController
+        arguments: [ "@service.session", "@model.user=", "@service.mail=" ]
+
+    controller.rest.user:
+        class: Weather\Rest\UserController
+        arguments: [ "@service.session", "@model.user=", "@form.user", "@service.mail=" ]
+
+    router.rest:
+        class: Weather\Router\RestRouter
+        arguments: [ "@app", "@service_container" ]
+        calls:
+            - [ setSession, [ "@service.session" ] ]
+
+    router.twig:
+        class: Weather\Router\TwigRouter
+        arguments: [ "@app", "@service_container", "@twig" ]
+        calls:
+            - [ setSession, [ "@service.session" ] ]
+
+    router.error:
+        class: Symlex\Router\ErrorRouter
+        arguments: [ "@app", "@twig", %exception.codes%, %exception.messages%, %app.debug% ]
+
+    controller.web.weather:
+        class: Weather\Controller\WeatherController
+        arguments: [ "@wunderground.client", "@form.weatherquery" ]
+

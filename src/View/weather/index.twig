@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <title>{{ app_name }}{% if page_name %} - {{ page_name }}{% endif %}</title>
+
+    {% if debug %}
+        <link href="/css/main.css" rel="stylesheet">
+    {% else %}
+        <link href="/build/main.css" rel="stylesheet">
+    {% endif %}
+
+    <script>
+        var appConfig = {
+            csrf_token: "{{ csrf_token }}",
+            user_id: {{ user_id ? user_id : 'null' }},
+            firstname: "{{ firstname }}",
+            lastname: "{{ lastname }}",
+            app_name: "{{ app_name }}",
+            app_version: "{{ app_version }}",
+            debug: {{ debug ? 'true' : 'false' }},
+            anonymous: {{ is_anonymous ? 'true' : 'false' }},
+            admin: {{ is_admin ? 'true' : 'false' }}
+        };
+    </script>
+</head>
+
+<body>
+<div class="container">
+<header>
+
+    <h1>Weather & Cats</h1>
+
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Weather</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a href="#">Home</a></li>
+                </ul>
+                <form  method="get" class="navbar-form navbar-right">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Berlin" name="location">
+                        <input type="text" class="form-control" placeholder="Germany" name="country">
+                    </div>
+                    <button type="submit" class="btn btn-default">Search</button>
+                </form>
+                <ul class="nav navbar-nav navbar-left">
+                    <li><a href="#">Link</a></li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+
+    <!--<form method="get">
+        <fieldset>
+        Suche: <label>Stadt:</label>
+        <input type="text" name="location">
+        <label>Land:</label>
+        <input type="text" name="country" placeholder="Germany">
+        <input type="submit" value="Suchen">
+        </fieldset>
+        <!--<fieldset>
+            <label>Stadt: </label>
+            <select name="location">
+                <option value="Berlin" >Berlin</option>
+                <option value="Hamburg" >Hamburg</option>
+                <option value="Sydney" name="location">Sydney</option>
+                <option value="Meckenheim" name="location">Meckenheim</option>
+                <option value="Tübingen" name="location">Tübingen</option>
+                <option value="New York" name="location">New York</option>
+            </select>
+            <label>Land: </label>
+            <select name="country">
+                <option value="Germany">Deutschland</option>
+                <option value="Australia" name="country">Australien</option>
+                <option value="New York" name="country">New York</option>
+                <option value="Austria" name="country">Österreich</option>
+                <option value="Spain" name="country">Spanien</option>
+                <option value="France" name="country">Frankreich</option>
+            </select>
+            <input type="submit" value="Suchen">
+        </fieldset> -->
+    </form>
+</header>
+
+<div id="main">
+
+
+        <div id="now" class="col-md-8">
+            <h2>{{ conditions.location }} : </h2>
+            <h2>Now: {{ conditions.current_observation.temp_c }} °C,
+                {{ conditions.current_observation.relative_humidity }},
+                {{ forecast.0.conditions }}</h2>
+            <img src="{{ conditions.current_observation.icon_url }}" class="col-md-3"> <br>
+                <div class="col-md-5">
+                    <p>Feelslike: {{ conditions.current_observation.feelslike_c }} °C <br>
+                Max/Min: {{ forecast.0.high }} °C / {{ forecast.0.low }} °C<br>
+                Sunrise: {{ sun_phase.sunrise.hour }} : {{ sun_phase.sunrise.minute }} Uhr<br>
+                        Sundown:  {{ sun_phase.sunset.hour }} : {{ sun_phase.sunset.minute }} Uhr<br></p>
+                </div>
+
+        </div>
+
+
+
+
+    <div id="forecast" class="col-md-12">
+
+        <div id="1" class="col-md-4">
+            <h3>{{ forecast.1.date.day }}.{{ forecast.1.date.month }}.{{ forecast.1.date.year }}</h3>
+            {{ forecast.1.conditions }}<br>
+            Temperature: {{ forecast.1.high }} °C / {{ forecast.1.low }} °C <br>
+            <div class="icon">
+                <img src="{{ forecast.1.icon_url }}">
+            </div>
+        </div>
+
+        <div id="2" class="col-md-4">
+            <h3>{{ forecast.2.date.day }}.{{ forecast.0.date.month }}.{{ forecast.2.date.year }}</h3>
+            {{ forecast.2.conditions }}<br>
+            Temperature: {{ forecast.2.high }} °C / {{ forecast.2.low }} °C <br>
+            <div class="icon">
+                <img src="{{ forecast.2.icon_url }}">
+            </div>
+        </div>
+
+        <div id="3" class="col-md-4">
+            <h3>{{ forecast.3.date.day }}.{{ forecast.3.date.month }}.{{ forecast.3.date.year }}</h3>
+            {{ forecast.3.conditions }}<br>
+            Temperature: {{ forecast.3.high }} °C / {{ forecast.3.low }} °C <br>
+            <div class="icon">
+                <img src="{{ forecast.3.icon_url }}">
+            </div>
+        </div>
+
+    </div>
+
+
+
+</div>
+</div>
+</body>
+</html>
