@@ -5,6 +5,7 @@ namespace Weather\Client;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Monolog\Logger;
 use Weather\Exception\Exception;
+use Weather\Exception\NotFoundException;
 
 class WundergroundClient
 {
@@ -71,6 +72,9 @@ class WundergroundClient
             $this->log('debug', 'Saved ' . $url . ' to cache');
         }
 
+        if(isset($result['response']['error'])) {
+            throw new NotFoundException($result['response']['error']['description']);
+        }
 
         return $result;
     }
@@ -79,12 +83,14 @@ class WundergroundClient
     {
         $response = $this->performRequest('astronomy', $location, $country);
         $result = $response['sun_phase'];
+
         return $result;
     }
 
     public function getConditions($location, $country)
     {
         $response = $this->performRequest('conditions', $location, $country);
+
         $result = array(
             'location' => $response['current_observation']['display_location']['full'],
             'current_observation' => array(

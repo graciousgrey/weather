@@ -7,12 +7,13 @@ parameters:
     exception.codes:
         InvalidArgumentException: 400
         Doctrine\ActiveRecord\Exception\NotFoundException: 404
-        App\Exception\UnauthorizedException: 401
-        App\Exception\AccessDeniedException: 403
+        Weather\Exception\UnauthorizedException: 401
+        Weather\Exception\AccessDeniedException: 403
+        Weather\Exception\NotFoundException: 404
         Symlex\Router\Exception\AccessDeniedException: 403
         Symlex\Router\Exception\NotFoundException: 404
         Symlex\Router\Exception\MethodNotAllowedException: 405
-        App\Exception\FormInvalidException: 409
+        Weather\Exception\FormInvalidException: 409
         Swift_TransportException: 503
         Exception: 500
 

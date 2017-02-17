@@ -4,6 +4,7 @@ namespace Weather\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Weather\Client\WundergroundClient;
+use Weather\Exception\NotFoundException;
 use Weather\Form\WeatherQueryForm;
 
 class WeatherController
@@ -23,10 +24,19 @@ class WeatherController
         // als $location gespeichert, falls location nicht gesetzt ist Berlin default value
         $country = $request->query->get('country', 'Germany');
 
-        $result = $this->client->getAll($location, $country);
+        try
+        {
+            $result = $this->client->getAll($location, $country);
+        } catch (NotFoundException $exception) {
+            return '/weather/notfound';
+        }
 
 
         return $result;
+    }
+
+    public function notfoundAction () {
+
     }
 }
 

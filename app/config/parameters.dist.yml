@@ -15,3 +15,6 @@ parameters:
     mailer.password: ''
     mailer.auth_mode: ''
     wunderground.apikey: 'cca50f0490f81828'
+    redis.host: 'redis'
+    redis.port: 6379
+    redis.ttl: 86400

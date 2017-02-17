@@ -4,6 +4,7 @@ namespace Weather\Tests\Client;
 
 use TestTools\TestCase\UnitTestCase;
 use Weather\Client\WundergroundClient;
+use Weather\Exception\NotFoundException;
 
 class WundergroundClientTest extends UnitTestCase
 {
@@ -83,5 +84,13 @@ class WundergroundClientTest extends UnitTestCase
 
         $logHandler->hasRecordThatContains('sun_phase', 'debug');
 
+    }
+
+    /**
+     * @expectedException \Weather\Exception\NotFoundException
+     */
+    public function testLocationNotFound () {
+        $client = $this->getClient();
+        $result = $client->getAll('Tübingen', 'Germany');
     }
 }
