@@ -24,8 +24,7 @@ class WeatherController
         // als $location gespeichert, falls location nicht gesetzt ist Berlin default value
         $country = $request->query->get('country', 'Germany');
 
-        try
-        {
+        try {
             $result = $this->client->getAll($location, $country);
         } catch (NotFoundException $exception) {
             return '/weather/notfound';
@@ -35,7 +34,8 @@ class WeatherController
         return $result;
     }
 
-    public function notfoundAction () {
+    public function notfoundAction()
+    {
 
     }
 }
