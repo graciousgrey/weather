@@ -11,17 +11,15 @@ class WeatherQueryForm extends FormAbstract {
             'location' => array(
                 'caption' => 'Location',
                 'required' => true,
-                'type' => 'string'
+                'type' => 'string',
+                'default' => 'Berlin'
             ),
             'country' => array(
                 'caption' => 'Country',
                 'required' => true,
                 'type' => 'string',
-                'options' => [ //manuell statt counrty-Liste, diese passt nucht zur weather api
-                    'Germany' => 'Deutschland',//man kann jetzt nur diese Länder auswählen
-                    'Australia' => 'Australien',
-                    'Austria' => 'Österreich'
-                ]
+                'options' => $this->options("weather_countries"),
+                'default' => 'Germany'
             ),
         );
 

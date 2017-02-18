@@ -65,7 +65,6 @@ class WundergroundClientTest extends UnitTestCase
         $this->assertArrayHasKey('sun_phase', $result);
         $this->assertArrayHasKey('conditions', $result);
         $this->assertArrayHasKey('forecast', $result);
-        print_r($result);
 
     }
 

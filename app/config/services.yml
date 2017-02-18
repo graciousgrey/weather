@@ -52,30 +52,40 @@ services:
 
     translator:
         class: Symfony\Component\Translation\Translator
-        arguments: [ "de", "@message_selector" ]
+        arguments: [ "en", "@message_selector" ]
         calls:
             - [ addLoader, [ "yaml", "@yaml_loader" ] ]
             - [ addLoader, [ "array", "@array_loader" ]]
             - [ addResource, [ "yaml", "%app.path%/l10n/de.yml", "de" ] ]
             - [ addResource, [ "yaml", "%app.path%/l10n/en.yml", "en" ] ]
 
-    validator:
-        class: InputValidation\Validator
+    form.options:
+        class: InputValidation\Form\Options\JsonOptions
+        arguments:
+            - "@translator"
+        calls:
+            - [ setOptionsPath, [ "%app.path%/options" ] ]
+
+    form.validator:
+        class: InputValidation\Form\Validator
 
     form.factory:
-        class: InputValidation\Factory
-        arguments: [ "@translator", "@validator" ]
+        class: InputValidation\Form\Factory
+        arguments:
+            - "@translator"
+            - "@form.validator"
+            - "@form.options"
         calls:
-            - [ setFactoryNamespace, [ 'App\Form' ] ]
-            - [ setFactoryPostfix, [ '' ] ]
+            - [ setFactoryNamespace, [ 'Weather\Form' ] ]
+            - [ setFactoryPostfix, [ 'Form' ] ]
 
     form.user:
         class: Weather\Form\UserForm
-        arguments: [ "@translator", "@validator" ]
+        arguments: [ "@translator", "@form.validator", "@form.options" ]
 
     form.weatherquery:
         class: Weather\Form\WeatherQueryForm
-        arguments: [ "@translator", "@validator" ]
+        arguments: [ "@translator", "@form.validator", "@form.options" ]
 
     dao.factory:
         class: Doctrine\ActiveRecord\Dao\Factory

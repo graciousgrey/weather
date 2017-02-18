@@ -20,12 +20,17 @@ class WeatherController
 
     public function indexAction(Request $request) //Framework speichert Request automatisch
     {
-        $location = $request->query->get('location', "Berlin"); // query Objekt im Request Objekt wird geöffnet und location value
-        // als $location gespeichert, falls location nicht gesetzt ist Berlin default value
-        $country = $request->query->get('country', 'Germany');
+        // query gibt URL Parameter (Get) zurück, für method Post braucht man request statt query
+        $this->form->setDefinedWritableValues($request->query->all());
+        $this->form->validate(); // Validation
+
+        if ($this->form->hasErrors()) {
+            return '/weather/invalid';
+        }
 
         try {
-            $result = $this->client->getAll($location, $country);
+            //magic __get function aus FormAbstract wird genutzt (form->)
+            $result = $this->client->getAll($this->form->location, $this->form->country);
         } catch (NotFoundException $exception) {
             return '/weather/notfound';
         }
@@ -35,6 +40,11 @@ class WeatherController
     }
 
     public function notfoundAction()
+    {
+
+    }
+
+    public function invalidAction()
     {
 
     }

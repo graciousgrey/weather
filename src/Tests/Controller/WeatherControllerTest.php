@@ -5,11 +5,13 @@ namespace Weather\Tests\Controller;
 use TestTools\TestCase\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
-class WeatherControllerTest extends UnitTestCase {
+class WeatherControllerTest extends UnitTestCase
+{
 
-    public function testWeatherController() {
+    public function testWeatherController()
+    {
         $controller = $this->get("controller.web.weather");
-        $request = Request::create('http://localhost-debug:8080/weather?location=Hamburg');
+        $request = Request::create('http://localhost-debug:8080/weather?location=Hamburg&country=Germany');
         $result = $controller->indexAction($request);
         $this->assertInternalType('array', $result);
         $this->assertArrayHasKey('sun_phase', $result);

@@ -21,7 +21,7 @@
     "require": {
         "php": ">=7.0",
         "lastzero/symlex-core": "^2.0",
-        "lastzero/php-input-validation": "^2.0",
+        "lastzero/php-input-validation": "^3.0",
         "lastzero/doctrine-active-record": "^2.0",
         "doctrine/dbal": "^2.5",
         "doctrine/migrations": "^1.1",
