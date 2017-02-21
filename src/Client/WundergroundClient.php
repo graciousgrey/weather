@@ -109,7 +109,7 @@ class WundergroundClient
         return $result;
     }
 
-    public function getForecast($location, $country)
+    public function getForecast($location, $country): array
     {
         $response = $this->performRequest('forecast', $location, $country);
 
@@ -128,7 +128,7 @@ class WundergroundClient
         return $result;
     }
 
-    public function getAll($location, $country)
+    public function getAll($location, $country): array
     {
         $result = array(
             'sun_phase' => $this->getSunPhase($location, $country),

@@ -10,13 +10,13 @@ class WeatherQueryForm extends FormAbstract {
         $definition = array(
             'location' => array(
                 'caption' => 'Location',
-                'required' => true,
+                'required' => false,
                 'type' => 'string',
                 'default' => 'Berlin'
             ),
             'country' => array(
                 'caption' => 'Country',
-                'required' => true,
+                'required' => false,
                 'type' => 'string',
                 'options' => $this->options("weather_countries"),
                 'default' => 'Germany'

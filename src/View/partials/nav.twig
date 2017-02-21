@@ -15,11 +15,15 @@
                 <li ng-class="{ active: isActive('/users')}"><a href="#/users">Users</a></li>
                 {% endif %}
                 <li ng-class="{ active: isActive('/profile')}"><a href="#/profile/{{ user_id }}">Profile</a></li>
+                <li ng-class="{ active: isActive('/weather')}"><a href="#/weather">Weather</a></li>
             </ul>
             <form id="logout" class="navbar-form login-form navbar-right" method="get" action="/auth/logout">
                 <button type="submit" class="btn btn-success">Logout {{ firstname }}</button>
             </form>
             {% else %}
+            <ul class="nav navbar-nav">
+                <li ng-class="{ active: isActive('/weather')}"><a href="#/weather">Weather</a></li>
+            </ul>
             <form id="login" class="navbar-form login-form navbar-right" method="post" name="header_login_form" action="/auth/login">
                 {% include 'partials/csrf_token.twig' %}
                 <div class="form-group">

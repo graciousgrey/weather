@@ -1,0 +1,97 @@
+<div class="container">
+
+    <header>
+
+        <h1>Weather & Cats</h1>
+
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">Weather</a>
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li><a href="#">Home</a></li>
+                    </ul>
+                    <form  method="get" class="navbar-form navbar-right">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Berlin" name="location" ng-model="location">
+                            <input type="text" class="form-control" placeholder="Germany" name="country" ng-model="country">
+                        </div>
+                        <button type="submit" class="btn btn-default" ng-click="search()">Search</button>
+                    </form>
+                    <ul class="nav navbar-nav navbar-left">
+                        <li><a href="#">Link</a></li>
+                    </ul>
+                </div><!-- /.navbar-collapse -->
+            </div><!-- /.container-fluid -->
+        </nav>
+
+    </header>
+
+    <div id="main">
+
+
+        <div id="now" class="col-md-8">
+            <h2>{{ weather.conditions.location }} : </h2>
+            <h2>Now: {{ weather.conditions.current_observation.temp_c }} °C,
+                {{ weather.conditions.current_observation.relative_humidity }},
+                {{ weather.forecast[0].conditions }}</h2>
+            <img src="{{ weather.conditions.current_observation.icon_url }}" class="col-md-3"> <br>
+            <div class="col-md-5">
+                <p>Feelslike: {{ weather.conditions.current_observation.feelslike_c }} °C <br>
+                    Max/Min: {{ weather.forecast[0].high }} °C / {{ weather.forecast[0].low }} °C<br>
+                    Sunrise: {{ weather.sun_phase.sunrise.hour }} : {{ weather.sun_phase.sunrise.minute }} Uhr<br>
+                    Sundown:  {{ weather.sun_phase.sunset.hour }} : {{ weather.sun_phase.sunset.minute }} Uhr<br></p>
+            </div>
+
+        </div>
+
+
+
+
+        <div id="forecast" class="col-md-12">
+
+            <div id="1" class="col-md-4">
+                <h3>{{ weather.forecast[1].date.day }}.{{ weather.forecast[1].date.month }}.{{ weather.forecast[1].date.year }}</h3>
+                {{ weather.forecast[1].conditions }}<br>
+                Temperature: {{ weather.forecast[1].high }} °C / {{ weather.forecast[1].low }} °C <br>
+                <div class="icon">
+                    <img src="{{ weather.forecast[1].icon_url }}">
+                </div>
+            </div>
+
+            <div id="2" class="col-md-4">
+                <h3>{{ weather.forecast[2].date.day }}.{{ weather.forecast[0].date.month }}.{{ weather.forecast[2].date.year }}</h3>
+                {{ weather.forecast[2].conditions }}<br>
+                Temperature: {{ weather.forecast[2].high }} °C / {{ weather.forecast[2].low }} °C <br>
+                <div class="icon">
+                    <img src="{{ weather.forecast[2].icon_url }}">
+                </div>
+            </div>
+
+            <div id="3" class="col-md-4">
+                <h3>{{ weather.forecast[3].date.day }}.{{ weather.forecast[3].date.month }}.{{ weather.forecast[3].date.year }}</h3>
+                {{ weather.forecast[3].conditions }}<br>
+                Temperature: {{ weather.forecast[3].high }} °C / {{ weather.forecast[3].low }} °C <br>
+                <div class="icon">
+                    <img src="{{ weather.forecast[3].icon_url }}">
+                </div>
+            </div>
+
+        </div>
+
+
+
+    </div>
+</div>
+</div>

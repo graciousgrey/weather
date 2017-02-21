@@ -1,9 +1,10 @@
 <?php
 
-namespace Weather\Controller;
+namespace Weather\Rest;
 
 use Symfony\Component\HttpFoundation\Request;
 use Weather\Client\WundergroundClient;
+use Weather\Exception\FormInvalidException;
 use Weather\Exception\NotFoundException;
 use Weather\Form\WeatherQueryForm;
 
@@ -18,35 +19,25 @@ class WeatherController
         $this->form = $form;
     }
 
-    public function indexAction(Request $request) //Framework speichert Request automatisch
+    public function cgetAction(Request $request) //Framework speichert Request automatisch
     {
         // query gibt URL Parameter (Get) zurück, für method Post braucht man request statt query
-        $this->form->setWritableValues($request->query->all());
+        $this->form->setDefinedWritableValues($request->query->all());
         $this->form->validate(); // Validation
 
         if ($this->form->hasErrors()) {
-            return '/weather/invalid';
+            throw new FormInvalidException($this->form->getFirstError());
         }
 
         try {
             //magic __get function aus FormAbstract wird genutzt (form->)
-            $result = $this->client->getAll($this->form->location, $this->form->country);
+            $result = array($this->client->getAll($this->form->location, $this->form->country));
         } catch (NotFoundException $exception) {
-            return '/weather/notfound';
+            $result = array(); //array nötig weil wir 0 - viele Ergebnisse im result rray haben wollen (also theoretisch,
+            //hier nicht)
         }
 
-
         return $result;
-    }
-
-    public function notfoundAction()
-    {
-
-    }
-
-    public function invalidAction()
-    {
-
     }
 }
 

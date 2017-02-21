@@ -13,8 +13,19 @@ define(['services/module'], function (services) {
             );
         }
 
+        function locationFactory () {
+            return $resource(
+                "/api/country/:country/location/:location", // :bla meint dann values
+                {
+                    country: "@country",
+                    location: "@location"
+                }
+            );
+        }
+
         return {
-            getUserResource : userFactory
+            getUserResource : userFactory,
+            getLocationResource : locationFactory
         }
     }]);
 });

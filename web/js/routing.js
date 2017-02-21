@@ -12,6 +12,12 @@ define(['app', 'angular', 'angularRoute'], function (app) {
         }).when('/users', {
             templateUrl: '/partials/users.html',
             controller: 'UsersController'
+        }).when('/weather', {
+            templateUrl: '/partials/weather.html',
+            controller: 'WeatherController'
+        }).when('/weather/:country/:location', {
+            templateUrl: '/partials/weather.html',
+            controller: 'WeatherController'
         }).when('/profile/:userId', {
             templateUrl: '/partials/profile.html',
             controller: 'ProfileController'

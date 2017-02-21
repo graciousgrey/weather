@@ -6,6 +6,7 @@ imports:
 parameters:
     exception.codes:
         InvalidArgumentException: 400
+        InputValidation\Exception\FormException: 400
         Doctrine\ActiveRecord\Exception\NotFoundException: 404
         Weather\Exception\UnauthorizedException: 401
         Weather\Exception\AccessDeniedException: 403
@@ -56,6 +57,14 @@ services:
     controller.rest.user:
         class: Weather\Rest\UserController
         arguments: [ "@service.session", "@model.user=", "@form.user", "@service.mail=" ]
+
+    controller.rest.weather:
+        class: Weather\Rest\WeatherController
+        arguments: [ "@wunderground.client", "@form.weatherquery" ]
+
+    controller.rest.country:
+        class: Weather\Rest\CountryController
+        arguments: [ "@wunderground.client", "@form.weatherquery" ]
 
     router.rest:
         class: Weather\Router\RestRouter

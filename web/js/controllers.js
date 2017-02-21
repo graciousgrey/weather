@@ -6,6 +6,7 @@ define([
     'controllers/password',
     'controllers/profile',
     'controllers/home',
-    'controllers/main'
+    'controllers/main',
+    'controllers/weather'
 ], function () {
 });

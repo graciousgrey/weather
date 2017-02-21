@@ -39,7 +39,7 @@ class WeatherQueryFormTest extends UnitTestCase
     public function testInvalidForm()
     {
         $inputValues = array(
-            'location' => '',
+            'location' => array('London', 'Berlin'),
             'country' => 'Catland'
         );
 
